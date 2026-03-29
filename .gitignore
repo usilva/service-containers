@@ -1,0 +1,11 @@
+# Ignore files related to API keys
+.env
+
+# Ignore gitea backup files
+src/gitea/backup/
+
+# Ignore postgres config file
+src/postgres/postgresql.conf
+
+# Ignore folder application data 
+src/*/data

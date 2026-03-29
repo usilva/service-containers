@@ -1,0 +1,25 @@
+networks:
+  proxy-ntwk:
+    external: true
+
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:lts
+    networks:
+      - proxy-ntwk
+    ports:
+     - "9000:9000"
+     - "9043:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-data:/data 
+    restart: unless-stopped
+
+volumes:
+  portainer-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PORTAINER_DATA_VOLUME}

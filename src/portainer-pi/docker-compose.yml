@@ -1,0 +1,19 @@
+services:
+  portainer:
+    container_name: portainer-pi
+    image: portainer/portainer-ce:lts
+    ports:
+     - "9000:9000"
+     - "9043:9443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-data:/data
+    restart: unless-stopped
+
+volumes:
+  portainer-data:
+    driver: local
+    driver_opts:
+      o: addr=${NAS_IP},username=${NAS_USER},password=${NAS_USER_SECRET},domain=WORKGROUP
+      type: cifs
+      device: //${NAS_IP}/container-data/portainer/data
