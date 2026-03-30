@@ -1,0 +1,55 @@
+networks:
+  postgres_db-network:
+    external: true    
+  forgejo:
+    external: false
+  proxy-ntwk:
+    external: true
+
+services:
+  server:
+    # image: codeberg.org/forgejo/forgejo:14-rootless
+    image: codeberg.org/forgejo/forgejo:10.0.3-rootless
+    container_name: forgejo
+    user: "${UID}:${GID}"
+    environment:
+      - USER_UID=966
+      - USER_GID=966
+      - FORGEJO__database__DB_TYPE=postgres
+      - FORGEJO__database__HOST=postgres:5432
+      - FORGEJO__database__NAME=forgejo
+      - FORGEJO__database__USER=forgejo
+      - FORGEJO__database__PASSWD=forgejo
+    restart: always
+    networks:
+      - postgres_db-network
+      - forgejo
+      - proxy-ntwk
+    volumes:
+      - forgejo:/var/lib/gitea
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "10038:3000"
+      - "9122:2222"
+  #   depends_on:
+  #     - db
+
+  # db:
+  #   image: postgres:14
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_USER=forgejo
+  #     - POSTGRES_PASSWORD=forgejo
+  #     - POSTGRES_DB=forgejo
+  #   networks:
+  #     - forgejo
+  #   volumes:
+  #     - ./postgres:/var/lib/postgresql/data
+
+volumes:
+  forgejo:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /volume1/container-data/forgejo/data
