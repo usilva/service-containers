@@ -30,12 +30,8 @@ services:
       - "10037:3000"
       - "9022:2222"
     volumes:
-      - type: bind
-        source: ./data/gitea-data
-        target: /var/lib/gitea
-      - type: bind
-        source: ./data/gitea-config
-        target: /etc/gitea
+      - gitea-data/gitea-data:/var/lib/gitea
+      - gitea-data/gitea-config:/etc/gitea
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
@@ -53,12 +49,8 @@ services:
     depends_on:
       - gitea
     volumes:
-      - type: bind
-        source: ./data/gitearunner-data
-        target: /data
-      - type: bind
-        source: ./data/gitearunner-config/config.yaml
-        target: /config.yaml
+      - gitea-data/gitearunner-data:/data
+      - gitea-data/gitearunner-config/config.yaml:/config.yaml
       - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
