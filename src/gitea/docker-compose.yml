@@ -1,0 +1,70 @@
+networks:
+  postgres_db-network:
+    external: true
+  gitea:
+    external: false
+  proxy-ntwk:
+    external: true
+
+services:
+  gitea:
+    container_name: gitea
+    image: docker.gitea.com/gitea:1.24.4-rootless
+    restart: always
+    user: "${UID}:${GID}"
+    environment:
+      # - USER_UID=1000
+      # - USER_GID=1000
+      - USER_UID=966
+      - USER_GID=966
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=postgres:5432
+      - GITEA__database__NAME=${GITEA_DB_NAME}
+      - GITEA__database__USER=${GITEA_DB_USER}
+      - GITEA__database__PASSWD=${GITEA_DB_PASSWORD}
+    networks:
+      - postgres_db-network
+      - gitea
+      - proxy-ntwk
+    ports:
+      - "10037:3000"
+      - "9022:2222"
+    volumes:
+      - type: bind
+        source: ./data/gitea-data
+        target: /var/lib/gitea
+      - type: bind
+        source: ./data/gitea-config
+        target: /etc/gitea
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+
+  runner:
+    image: gitea/act_runner:nightly
+    environment:
+      CONFIG_FILE: /config.yaml
+      GITEA_INSTANCE_URL: "${INSTANCE_URL}"
+      GITEA_RUNNER_REGISTRATION_TOKEN: "${REGISTRATION_TOKEN}"
+      GITEA_RUNNER_NAME: "${RUNNER_NAME}"
+      GITEA_RUNNER_LABELS: "${RUNNER_LABELS}"
+    networks:
+      - gitea
+    depends_on:
+      - gitea
+    volumes:
+      - type: bind
+        source: ./data/gitearunner-data
+        target: /data
+      - type: bind
+        source: ./data/gitearunner-config/config.yaml
+        target: /config.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  gitea-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${GITEA_DATA_VOLUME}
