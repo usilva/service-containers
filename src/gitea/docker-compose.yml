@@ -30,8 +30,8 @@ services:
       - "10037:3000"
       - "9022:2222"
     volumes:
-      - gitea-data/gitea-data:/var/lib/gitea
-      - gitea-data/gitea-config:/etc/gitea
+      - ${GITEA_DATA_VOLUME}/gitea-data:/var/lib/gitea
+      - ${GITEA_DATA_VOLUME}/gitea-config:/etc/gitea
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
 
@@ -49,14 +49,14 @@ services:
     depends_on:
       - gitea
     volumes:
-      - gitea-data/gitearunner-data:/data
-      - gitea-data/gitearunner-config/config.yaml:/config.yaml
+      - ${GITEA_DATA_VOLUME}/gitearunner-data:/data
+      - ${GITEA_DATA_VOLUME}/gitearunner-config/config.yaml:/config.yaml
       - /var/run/docker.sock:/var/run/docker.sock
 
-volumes:
-  gitea-data:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${GITEA_DATA_VOLUME}
+# volumes:
+#   gitea-data:
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: ${GITEA_DATA_VOLUME}
