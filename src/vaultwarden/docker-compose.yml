@@ -10,7 +10,7 @@ services:
     environment:
       DOMAIN: ${DOMAIN}
     volumes:
-      - - ${VAULTWARDEN_DATA_VOLUME}:/data/
+      - ${VAULTWARDEN_DATA_VOLUME}:/data/
     ports:
       - 8888:80
     networks:
