@@ -1,0 +1,17 @@
+networks:
+  proxy-ntwk:
+    external: true
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:1.35.4-alpine
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - - ${VAULTWARDEN_DATA_VOLUME}:/data/
+    ports:
+      - 8888:80
+    networks:
+      - proxy-ntwk
