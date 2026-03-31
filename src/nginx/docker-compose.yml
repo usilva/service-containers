@@ -1,0 +1,36 @@
+name: nginx-pm
+
+networks:
+  proxy-ntwk:
+    name: proxy-ntwk
+    external: false
+  external-access-ntwk:
+    external: true
+
+services:
+  nginx-pm:
+    container_name: nginx-pm
+    image: jc21/nginx-proxy-manager:2.14.0
+    restart: unless-stopped
+    environment:
+      INITIAL_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      INITIAL_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    ports:
+      - '8088:80'
+      - '8188:81'
+      - '8443:443'
+    volumes:
+      - ${NGINX_DATA}:/data
+      - ${NGINX_CRYPT}:/etc/letsencrypt
+    networks:
+      proxy-ntwk:
+      external-access-ntwk:
+        ipv4_address: 172.16.3.5
+      
+# volumes:
+#   nginx-data:
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: ../data/nginx

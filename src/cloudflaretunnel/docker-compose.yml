@@ -1,0 +1,20 @@
+networks:
+  external-access-ntwk:
+    name: external-access-ntwk
+    external: false
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.16.3.0/24
+
+services:
+  cloudflaretunnel:
+    container_name: cloudflaretunnel
+    image: cloudflare/cloudflared:2026.3.0
+    restart: unless-stopped
+    environment:
+      - TUNNEL_TOKEN=$TUNNEL_TOKEN
+    command: tunnel --no-autoupdate run
+    networks:
+      external-access-ntwk:
+        ipv4_address: 172.16.3.2
