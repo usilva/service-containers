@@ -12,8 +12,8 @@ services:
       - 10040:${LLAMA_SERVER_PORT}
     networks:
       - proxy-ntwk
-    # image: ghcr.io/ggml-org/llama.cpp:server-openvino
-    image: ghcr.io/ggml-org/llama.cpp:server
+    image: ghcr.io/ggml-org/llama.cpp:server-openvino
+    # image: ghcr.io/ggml-org/llama.cpp:server
     command: ${COMMAND_PARAM}
 
 volumes:      
