@@ -4,9 +4,10 @@ services:
     volumes:
       - models-volume:/models
     ports:
-      - 10040:8080
-    image: ghcr.io/ggml-org/llama.cpp:server-openvino
-    command: -m /models/7B/ggml-model-q4_0.gguf --port 8080 --host 0.0.0.0 -n 512
+      - 10040:${LLAMA_SERVER_PORT}
+    # image: ghcr.io/ggml-org/llama.cpp:server-openvino
+    image: ghcr.io/ggml-org/llama.cpp:server
+    command: ${COMMAND_PARAM}
 
 volumes:      
   models-volume:
