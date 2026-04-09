@@ -1,10 +1,17 @@
 name: llama-cpp
+
+networks:
+  proxy-ntwk:
+    external: true
+
 services:
   llama.cpp:
     volumes:
       - models-volume:/models
     ports:
       - 10040:${LLAMA_SERVER_PORT}
+    networks:
+      - proxy-ntwk
     # image: ghcr.io/ggml-org/llama.cpp:server-openvino
     image: ghcr.io/ggml-org/llama.cpp:server
     command: ${COMMAND_PARAM}
